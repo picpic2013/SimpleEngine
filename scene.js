@@ -8,61 +8,91 @@ class Scene1 extends TimeLineEngine {
 
     setup() {
         const that = this;
+
+        this.addSegment(new BaseSegment({'ref': new AxesHelperElement({
+            'axesSize': 100
+        })}));
+
         this.addSegment(new BaseSegment({
-           'ref': new CustomElement({
-               'init': ( engine ) => {
-                   console.log("axes init")
-                   this.axes = new THREE.AxisHelper(20);
-                   engine.__scene__.add(this.axes);
-               },
-               'onDelete': ( engine ) => {
-                   engine.__scene__.remove(this.axes);
-               }
-           }),
-            'animations': [ new CustomAnimation({
-                'hasEnd': ( engine ) => { return engine.nowTime > 9000; }
-            }) ],
-            'hasEnd': ( engine ) => {
-               return engine.nowTime > 10000;
-            }
+            'ref': new CircleElement({
+                'thetaLength': Math.PI / 2,
+                'thetaStart': Math.PI / 4
+            }),
+            'animations': [
+                new TransparencyAnimation({
+                    'from': 0,
+                    'to': 1
+                }),
+                new ChangeColorAnimation({
+                    'to': 0xff7799
+                }),
+                new DoNothingAnimation(),
+                // new testAnimation(),
+                new MoveAnimation({
+                    'to': [30, 30, 0]
+                }),
+                new RotationAnimation({
+                    'to': [0, 0, Math.PI * 2]
+                }),
+                new MoveAnimation({
+                    'to': [-20, -20, 0]
+                }),
+                new GroupAnimation({
+                    'animations': [
+                        new MoveAnimation({
+                            'to': [-10, -10, 0],
+                            'relative': false
+                        }),
+                        new RotationAnimation({
+                            'to': [0, 0, -Math.PI / 2]
+                        }),
+                        new ChangeColorAnimation({
+                            'to': 0x66ccff,
+                            'duration': 5000
+                        })
+                    ]
+                }),
+                new RotationAnimation({
+                    'to': [0, 0, Math.PI / 4]
+                }),
+                new RotationAnimation({
+                    'to': [0, 0, Math.PI / 4]
+                }),
+                new RotationAnimation({
+                    'to': [0, 0, Math.PI * 4],
+                    'relative': false
+                }),
+                new ScaleAnimation({
+                    'to': [3.0, 5.0, 3.0]
+                }),
+                new TransparencyAnimation({
+                    'to': 0.5
+                }),
+                new BasicAnimation()
+            ]
         }));
 
-        // this.addSegment()
-
         this.addSegment(new BaseSegment({
             'animations': [ new CustomAnimation({
-                'init': ( engine ) => {
+                'init': function ( engine ) {
                     console.log("camera init")
                     this.__camera__ = that.__camera__;
                     this.rad = 0;
                     this.r = 50;
                 },
-                'update': ( engine ) => {
+                'update': function ( engine ) {
                     this.__camera__.position.set(
                         this.r * Math.cos(this.rad),
                         this.r * Math.sin(this.rad),
-                        50
+                        100
                     );
-                    this.__camera__.lookAt(this.__scene__.position);
-                    this.rad += 0.01;
+                    this.__camera__.lookAt(that.__scene__.position);
+                    this.rad += 0.005;
                 },
-                'hasEnd': ( engine ) => {
-                    return engine.nowTime > 4000;
+                'hasEnd': function ( engine ) {
+                    return engine.nowTime > 12000;
                 }
-            }), new CustomAnimation({
-                'update': ( engine ) => {
-                    this.__camera__.position.set(
-                        this.r * Math.cos(this.rad),
-                        this.r * Math.sin(this.rad),
-                        50
-                    );
-                    this.__camera__.lookAt(this.__scene__.position);
-                    this.rad -= 0.01;
-                },
-                'hasEnd': ( engine ) => {
-                    return engine.nowTime > 8000;
-                }
-            }) ],
+            })],
         }));
     }
 }
