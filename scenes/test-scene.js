@@ -72,28 +72,28 @@ class Scene1 extends TimeLineEngine {
             ]
         }));
 
-        // this.addSegment(new BaseSegment({
-        //     'animations': [ new CustomAnimation({
-        //         'init': function ( engine ) {
-        //             console.log("camera init")
-        //             this.__camera__ = that.__camera__;
-        //             this.rad = 0;
-        //             this.r = 50;
-        //         },
-        //         'update': function ( engine ) {
-        //             this.__camera__.position.set(
-        //                 this.r * Math.cos(this.rad),
-        //                 this.r * Math.sin(this.rad),
-        //                 100
-        //             );
-        //             this.__camera__.lookAt(that.__scene__.position);
-        //             this.rad += 0.005;
-        //         },
-        //         'hasEnd': function ( engine ) {
-        //             return engine.nowTime > 12000;
-        //         }
-        //     })],
-        // }));
+        this.addSegment(new BaseSegment({
+            'animations': [ new CustomAnimation({
+                'init': function ( engine ) {
+                    console.log("camera init")
+                    this.__camera__ = that.__camera__;
+                    this.rad = 0;
+                    this.r = 50;
+                },
+                'update': function ( engine ) {
+                    this.__camera__.position.set(
+                        this.r * Math.cos(this.rad),
+                        this.r * Math.sin(this.rad),
+                        100
+                    );
+                    this.__camera__.lookAt(that.__scene__.position);
+                    this.rad += 0.005;
+                },
+                'hasEnd': function ( engine ) {
+                    return engine.nowTime > 12000;
+                }
+            })],
+        }));
 
         this.addSegment(new BaseSegment({
             'ref': new LatexElement({
@@ -108,6 +108,9 @@ class Scene1 extends TimeLineEngine {
                         }),
                         new MoveAnimation({
                             'to': [10, 10, 0]
+                        }),
+                        new ScaleAnimation({
+                            'to': [2, 2, 2]
                         })
                     ]
                 }),

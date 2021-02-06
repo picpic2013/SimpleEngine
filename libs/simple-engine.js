@@ -539,7 +539,8 @@ class LatexElement extends BaseElement {
             'color': 0x0,
             'side': THREE.DoubleSide,
             'depthWrite': false,
-            'defaultScale': [0.005, 0.005, 0.005]
+            'defaultScale': [0.005, 0.005, 0.005],
+            'defaultRotation': [Math.PI, 0, 0]
         });
 
         for (const i in tmpConf) {
@@ -558,14 +559,12 @@ class LatexElement extends BaseElement {
 
         const material = new THREE.MeshBasicMaterial({
             'color': this.color,
-            'side': this.side,
-            'depthWrite': this.depthWrite
+            'side': this.side
         });
 
         for (const path of this.loader.parse(this.svgString).paths) {
             for (const shape of path.toShapes(true)) {
                 const geo = new THREE.ShapeBufferGeometry(shape);
-                geo.scale
                 const mesh = new THREE.Mesh(geo, material);
 
                 this.ele.add(mesh);
@@ -585,9 +584,9 @@ class LatexElement extends BaseElement {
         );
 
         this.ele.rotation.set(
-            this.rotation[0],
-            this.rotation[1],
-            this.rotation[2],
+            this.rotation[0] + this.defaultRotation[0],
+            this.rotation[1] + this.defaultRotation[1],
+            this.rotation[2] + this.defaultRotation[2]
         );
 
         this.ele.scale.set(
