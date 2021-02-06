@@ -378,7 +378,7 @@ class AxesHelperElement extends BaseElement {
 
     init(engine) {
         super.init(engine);
-        this.axes = new THREE.AxisHelper(this.axesSize * this.scale[0]);
+        this.axes = new THREE.AxesHelper(this.axesSize * this.scale[0]);
         engine.__scene__.add(this.axes);
     }
 
@@ -526,6 +526,85 @@ class CircleElement extends BaseElement {
 
     onDelete(engine) {
         super.onDelete(engine);
+        engine.__scene__.remove(this.ele);
+    }
+}
+
+class LatexElement extends BaseElement {
+    constructor(attr = {}) {
+        super(attr);
+
+        const tmpConf = __mergeDefault__(attr, {
+            'content': '',
+            'color': 0x0,
+            'side': THREE.DoubleSide,
+            'depthWrite': false,
+            'defaultScale': [0.005, 0.005, 0.005]
+        });
+
+        for (const i in tmpConf) {
+            this[i] = tmpConf[i];
+        }
+
+        this.svgString = MathJax.tex2svg(this.content).innerHTML;
+    }
+
+
+    init(engine) {
+        super.init(engine);
+
+        this.loader = new THREE.SVGLoader();
+        this.ele = new THREE.Group();
+
+        const material = new THREE.MeshBasicMaterial({
+            'color': this.color,
+            'side': this.side,
+            'depthWrite': this.depthWrite
+        });
+
+        for (const path of this.loader.parse(this.svgString).paths) {
+            for (const shape of path.toShapes(true)) {
+                const geo = new THREE.ShapeBufferGeometry(shape);
+                geo.scale
+                const mesh = new THREE.Mesh(geo, material);
+
+                this.ele.add(mesh);
+            }
+        }
+
+        engine.__scene__.add(this.ele);
+    }
+
+    update(engine) {
+        super.update(engine);
+
+        this.ele.position.set(
+            this.position[0],
+            this.position[1],
+            this.position[2]
+        );
+
+        this.ele.rotation.set(
+            this.rotation[0],
+            this.rotation[1],
+            this.rotation[2],
+        );
+
+        this.ele.scale.set(
+            this.scale[0] * this.defaultScale[0],
+            this.scale[1] * this.defaultScale[1],
+            this.scale[2] * this.defaultScale[2]
+        );
+
+        for (const i of this.ele.children) {
+            i.material.color.setHex(this.color);
+            i.material.opacity = this.transparency;
+        }
+    }
+
+    onDelete(engine) {
+        super.onDelete(engine);
+
         engine.__scene__.remove(this.ele);
     }
 }

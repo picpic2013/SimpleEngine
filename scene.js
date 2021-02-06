@@ -1,6 +1,6 @@
 class Scene1 extends TimeLineEngine {
-    constructor() {
-        super();
+    constructor(attr = {}) {
+        super(attr);
 
         this.r = 100;
         this.rad = 0;
@@ -72,28 +72,48 @@ class Scene1 extends TimeLineEngine {
             ]
         }));
 
+        // this.addSegment(new BaseSegment({
+        //     'animations': [ new CustomAnimation({
+        //         'init': function ( engine ) {
+        //             console.log("camera init")
+        //             this.__camera__ = that.__camera__;
+        //             this.rad = 0;
+        //             this.r = 50;
+        //         },
+        //         'update': function ( engine ) {
+        //             this.__camera__.position.set(
+        //                 this.r * Math.cos(this.rad),
+        //                 this.r * Math.sin(this.rad),
+        //                 100
+        //             );
+        //             this.__camera__.lookAt(that.__scene__.position);
+        //             this.rad += 0.005;
+        //         },
+        //         'hasEnd': function ( engine ) {
+        //             return engine.nowTime > 12000;
+        //         }
+        //     })],
+        // }));
+
         this.addSegment(new BaseSegment({
-            'animations': [ new CustomAnimation({
-                'init': function ( engine ) {
-                    console.log("camera init")
-                    this.__camera__ = that.__camera__;
-                    this.rad = 0;
-                    this.r = 50;
-                },
-                'update': function ( engine ) {
-                    this.__camera__.position.set(
-                        this.r * Math.cos(this.rad),
-                        this.r * Math.sin(this.rad),
-                        100
-                    );
-                    this.__camera__.lookAt(that.__scene__.position);
-                    this.rad += 0.005;
-                },
-                'hasEnd': function ( engine ) {
-                    return engine.nowTime > 12000;
-                }
-            })],
-        }));
+            'ref': new LatexElement({
+                'content': '123',
+                'rotation': [Math.PI, 0, 0]
+            }), 
+            'animations': [
+                new GroupAnimation({
+                    'animations': [
+                        new ChangeColorAnimation({
+                            'to': 0x66ccff
+                        }),
+                        new MoveAnimation({
+                            'to': [10, 10, 0]
+                        })
+                    ]
+                }),
+                new BasicAnimation()
+            ]
+        }))
     }
 }
 
