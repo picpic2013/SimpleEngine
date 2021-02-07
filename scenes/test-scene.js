@@ -95,11 +95,10 @@ class Scene1 extends TimeLineEngine {
             })],
         }));
 
-        this.addSegment(new BaseSegment({
+        let conetenSeg = new BaseSegment({
             'ref': new LatexElement({
                 'content': '123',
-                'rotation': [Math.PI, 0, 0]
-            }), 
+            }),
             'animations': [
                 new GroupAnimation({
                     'animations': [
@@ -116,7 +115,18 @@ class Scene1 extends TimeLineEngine {
                 }),
                 new BasicAnimation()
             ]
-        }))
+        });
+
+        this.addSegment(conetenSeg);
+
+        const func = () => {
+            conetenSeg.addAnimation(new MoveAnimation({
+                'to': [-10, -10, 0]
+            }));
+            conetenSeg.addAnimation(new BasicAnimation());
+        };
+
+        setInterval(func, 2000);
     }
 }
 

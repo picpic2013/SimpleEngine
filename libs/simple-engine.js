@@ -61,7 +61,10 @@ class BasicAnimation {
     update(engine) {}
     onDelete(engine) {}
     hasEnd(engine) {
-        return false;
+        if (this.seg.animations.length === 0) {
+            throw "Animation out of sync. "
+        }
+        return !(this.seg.animations[this.seg.animations.length - 1] === this);
     }
 }
 
@@ -118,6 +121,8 @@ class BaseSegment {
     }
     addAnimation(ani, index = -1) {
         if (ani instanceof BasicAnimation) {
+            ani.setSegment(this);
+            ani.setRef(this.ref);
             if (index === -1) {
                 this.animations.push(ani);
                 this.isEnd = false;
